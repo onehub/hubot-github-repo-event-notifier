@@ -144,6 +144,40 @@ module.exports =
 
     callback "New Comment on Pull Request \"#{comment.body}\" by #{comment.user.login}: #{comment.html_url}"
 
+  # pull_request: (data, callback) ->
+  #   pull_num = data.number
+  #   pull_req = data.pull_request
+  #   base = data.base
+  #   repo = data.repository
+  #   sender = data.sender
+
+  #   action = data.action
+
+  #   msg = "Pull Request \##{data.number} \"#{pull_req.title}\" "
+
+  #   switch action
+  #     when "assigned"
+  #       msg += " assigned to: #{data.assignee.login} by #{sender.login} "
+  #     when "unassigned"
+  #       msg += " unassigned #{data.assignee.login} by #{sender.login} "
+  #     when "opened"
+  #       msg += " opened by #{sender.login} "
+  #     when "closed"
+  #       if pull_req.merged
+  #         msg += " merged by #{sender.login} "
+  #       else
+  #         msg += " closed by #{sender.login} "
+  #     when "reopened"
+  #       msg += " reopened by #{sender.login} "
+  #     when "labeled"
+  #       msg += " #{sender.login} added label: \"#{data.label.name}\" "
+  #     when "unlabeled"
+  #       msg += " #{sender.login} removed label: \"#{data.label.name}\" "
+  #     when "synchronize"
+  #       msg +=" synchronized by #{sender.login} "
+
+  #   callback msg + "- #{pull_req.html_url}"
+
   pull_request: (data, callback) ->
     pull_num = data.number
     pull_req = data.pull_request
@@ -151,32 +185,11 @@ module.exports =
     repo = data.repository
     sender = data.sender
 
-    action = data.action
+    return unless data.label? && data.label.name == "needs code review"
 
-    msg = "Pull Request \##{data.number} \"#{pull_req.title}\" "
+    msg = "@here: #{pull_req.user.login} has a Pull Request that `needs code review`\n\##{data.number} \"#{pull_req.title}\"\n#{pull_req.html_url}"
 
-    switch action
-      when "assigned"
-        msg += " assigned to: #{data.assignee.login} by #{sender.login} "
-      when "unassigned"
-        msg += " unassigned #{data.assignee.login} by #{sender.login} "
-      when "opened"
-        msg += " opened by #{sender.login} "
-      when "closed"
-        if pull_req.merged
-          msg += " merged by #{sender.login} "
-        else
-          msg += " closed by #{sender.login} "
-      when "reopened"
-        msg += " reopened by #{sender.login} "
-      when "labeled"
-        msg += " #{sender.login} added label: \"#{data.label.name}\" "
-      when "unlabeled"
-        msg += " #{sender.login} removed label: \"#{data.label.name}\" "
-      when "synchronize"
-        msg +=" synchronized by #{sender.login} "
-
-    callback msg + "- #{pull_req.html_url}"
+    callback msg
 
   push: (data, callback) ->
     commit = data.after
