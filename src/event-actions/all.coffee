@@ -187,7 +187,7 @@ module.exports =
 
     return unless data.label? && data.label.name == "needs code review"
 
-    msg = "@here: #{pull_req.user.login} has a Pull Request that `needs code review`\n\##{data.number} \"#{pull_req.title}\"\n#{pull_req.html_url}"
+    msg = "@here: \##{data.number} `needs code review` #{pull_req.html_url}"
 
     callback msg
 
