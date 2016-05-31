@@ -69,31 +69,29 @@ module.exports = (robot) ->
     robot.logger.debug "github-repo-event-notifier: Processing event type: \"#{eventType}\"..."
 
     try
+      filter_parts = eventTypes.filter (e) ->
+        # should always be at least two parts, from eventTypes creation above
+        parts = e.split(":")
+        event_part = parts[0]
+        action_part = parts[1]
 
-      filter_parts = eventTypes
-        .filter (e) ->
-          # should always be at least two parts, from eventTypes creation above
-          parts = e.split(":")
-          event_part = parts[0]
-          action_part = parts[1]
+        if event_part != eventType
+          return false # remove anything that isn't this event
 
-          if event_part != eventType
-            return false # remove anything that isn't this event
+        if action_part == "*"
+          return true # wildcard on this event
 
-          if action_part == "*"
-            return true # wildcard on this event
+        if !data.hasOwnProperty('action')
+          return true # no action property, let it pass
 
-          if !data.hasOwnProperty('action')
-            return true # no action property, let it pass
+        if action_part == data.action
+          return true # action match
 
-          if action_part == data.action
-            return true # action match
-
-          return false # no match, fail
+        return false # no match, fail
 
       if filter_parts.length > 0
-        announceRepoEvent data, eventType, (what) ->
-          robot.messageRoom room, what
+        announceRepoEvent data, eventType, (what, responseRoom = room) ->
+          robot.messageRoom responseRoom, what
       else
         console.log "Ignoring #{eventType}:#{data.action} as it's not allowed."
     catch error
