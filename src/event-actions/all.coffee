@@ -123,6 +123,9 @@ module.exports =
         msg  = "@here: The following `customers impacted` issue was closed.\n#{issue.html_url}"
         room = 'support'
 
+        console.log 'Github callback executing notifier callback...'
+        console.log msg, room
+
         callback msg, room
     catch error
       console.log "Error: #{error}. Stack:\n#{error.stack}"
