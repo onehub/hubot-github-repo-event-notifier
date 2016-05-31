@@ -22,6 +22,8 @@ extractMentionsFromBody = (body) ->
   else
     ""
 
+github = require('githubot')
+
 module.exports =
   commit_comment: (data, callback) ->
     comment = data.comment
