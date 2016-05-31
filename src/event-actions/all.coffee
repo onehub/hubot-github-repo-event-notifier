@@ -187,11 +187,28 @@ module.exports =
     repo = data.repository
     sender = data.sender
 
-    return unless data.label? && data.label.name == "needs code review"
+    action = data.action
 
-    msg = "@here: \##{data.number} `needs code review` #{pull_req.html_url}"
+    switch action
+      when 'labeled'
+        if data.label? && data.label.name == 'needs code review'
+          msg  = "@here: \##{data.number} `needs code review` #{pull_req.html_url}"
+          room = 'development'
 
-    callback msg
+          callback msg, room
+      when 'closed'
+        # Hit github API and find out if it has "customers impacted" label
+        github.get "/repos/onehub/doppio/pulls/#{pull_req.id}", (pull) ->
+          labels = pull.labels.map (label) -> label.name
+
+          return unless labels.indexOf('customers impacted') > -1
+
+          msg  = "@here: The following `customers impacted` issue was closed.\n#{pull.html_url}"
+          room = 'support'
+
+          callback msg, room
+      else
+        return
 
   push: (data, callback) ->
     commit = data.after
