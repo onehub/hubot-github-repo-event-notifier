@@ -114,6 +114,8 @@ module.exports =
 
     try
       github.get "/repos/onehub/doppio/issues/#{issue.number}", (issue) ->
+        console.log 'Github callback executing...'
+
         labels = issue.labels.map (label) -> label.name
 
         return unless labels.indexOf('customers impacted') > -1
