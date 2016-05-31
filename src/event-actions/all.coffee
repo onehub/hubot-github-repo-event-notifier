@@ -110,25 +110,15 @@ module.exports =
 
     return unless action == 'closed'
 
-    console.log "GET /repos/onehub/doppio/issues/#{issue.number}"
+    github.get "/repos/onehub/doppio/issues/#{issue.number}", (issue) ->
+      labels = issue.labels.map (label) -> label.name
 
-    try
-      github.get "/repos/onehub/doppio/issues/#{issue.number}", (issue) ->
-        console.log 'Github callback executing...'
+      return unless labels.indexOf('customers impacted') > -1
 
-        labels = issue.labels.map (label) -> label.name
+      msg  = "@here: The following `customers impacted` issue was closed.\n#{issue.html_url}"
+      room = 'support'
 
-        return unless labels.indexOf('customers impacted') > -1
-
-        msg  = "@here: The following `customers impacted` issue was closed.\n#{issue.html_url}"
-        room = 'support'
-
-        console.log 'Github callback executing notifier callback...'
-        console.log msg, room
-
-        callback msg, room
-    catch error
-      console.log "Error: #{error}. Stack:\n#{error.stack}"
+      callback msg, room
 
   issue_comment: (data, callback) ->
     issue = data.issue

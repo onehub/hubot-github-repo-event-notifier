@@ -91,9 +91,7 @@ module.exports = (robot) ->
 
       if filter_parts.length > 0
         announceRepoEvent data, eventType, (what, responseRoom = room) ->
-          console.log "Posting to #{responseRoom}..."
           robot.messageRoom responseRoom, what
-          console.log "Finished posting"
       else
         console.log "Ignoring #{eventType}:#{data.action} as it's not allowed."
     catch error
