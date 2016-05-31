@@ -113,14 +113,17 @@ module.exports =
     console.log "GET /repos/onehub/doppio/issues/#{issue.number}"
 
     github.get "/repos/onehub/doppio/issues/#{issue.number}", (issue) ->
-      labels = issue.labels.map (label) -> label.name
+      try
+        labels = issue.labels.map (label) -> label.name
 
-      return unless labels.indexOf('customers impacted') > -1
+        return unless labels.indexOf('customers impacted') > -1
 
-      msg  = "@here: The following `customers impacted` issue was closed.\n#{issue.html_url}"
-      room = 'support'
+        msg  = "@here: The following `customers impacted` issue was closed.\n#{issue.html_url}"
+        room = 'support'
 
-      callback msg, room
+        callback msg, room
+      catch error
+        console.log "Error: #{error}. Stack:\n#{error.stack}"
 
   issue_comment: (data, callback) ->
     issue = data.issue
