@@ -110,6 +110,8 @@ module.exports =
 
     return unless action == 'closed'
 
+    console.log "GET /repos/onehub/doppio/issues/#{issue.id}"
+
     github.get "/repos/onehub/doppio/issues/#{issue.id}", (issue) ->
       labels = issue.labels.map (label) -> label.name
 
@@ -216,6 +218,9 @@ module.exports =
           callback msg, room
       when 'closed'
         # Hit github API and find out if it has "customers impacted" label
+
+        console.log "GET /repos/onehub/doppio/pulls/#{pull_req.id}"
+
         github.get "/repos/onehub/doppio/pulls/#{pull_req.id}", (pull) ->
           labels = pull.labels.map (label) -> label.name
 
