@@ -76,31 +76,49 @@ module.exports =
 
     callback "Wiki page: #{page.page_name} #{page.action} on #{repo.full_name} by #{sender.login}"
 
+  # issues: (data, callback) ->
+  #   issue = data.issue
+  #   repo = data.repository
+  #   action = data.action
+  #   sender = data.sender
+
+  #   msg = "Issue \##{issue.number} \"#{issue.title}\""
+
+  #   switch action
+  #     when "assigned"
+  #       msg += " assigned to: #{issue.assignee.login} by #{sender.login} "
+  #     when "unassigned"
+  #       msg += " unassigned #{data.assignee.login} by #{sender.login} "
+  #     when "opened"
+  #       msg += " opened by #{sender.login} "
+  #     when "closed"
+  #       msg += " closed by #{sender.login} "
+  #     when "reopened"
+  #       msg += " reopened by #{sender.login} "
+  #     when "labeled"
+  #       msg += " #{sender.login} added label: \"#{data.label.name}\" "
+  #     when "unlabeled"
+  #       msg += " #{sender.login} removed label: \"#{data.label.name}\" "
+
+  #   callback msg + "- #{issue.html_url}"
+
   issues: (data, callback) ->
     issue = data.issue
     repo = data.repository
     action = data.action
     sender = data.sender
 
-    msg = "Issue \##{issue.number} \"#{issue.title}\""
+    return unless action == 'closed'
 
-    switch action
-      when "assigned"
-        msg += " assigned to: #{issue.assignee.login} by #{sender.login} "
-      when "unassigned"
-        msg += " unassigned #{data.assignee.login} by #{sender.login} "
-      when "opened"
-        msg += " opened by #{sender.login} "
-      when "closed"
-        msg += " closed by #{sender.login} "
-      when "reopened"
-        msg += " reopened by #{sender.login} "
-      when "labeled"
-        msg += " #{sender.login} added label: \"#{data.label.name}\" "
-      when "unlabeled"
-        msg += " #{sender.login} removed label: \"#{data.label.name}\" "
+    github.get "/repos/onehub/doppio/issues/#{issue.id}", (issue) ->
+      labels = issue.labels.map (label) -> label.name
 
-    callback msg + "- #{issue.html_url}"
+      return unless labels.indexOf('customers impacted') > -1
+
+      msg  = "@here: The following `customers impacted` issue was closed.\n#{issue.html_url}"
+      room = 'support'
+
+      callback msg, room
 
   issue_comment: (data, callback) ->
     issue = data.issue
