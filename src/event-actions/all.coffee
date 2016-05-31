@@ -112,8 +112,8 @@ module.exports =
 
     console.log "GET /repos/onehub/doppio/issues/#{issue.number}"
 
-    github.get "/repos/onehub/doppio/issues/#{issue.number}", (issue) ->
-      try
+    try
+      github.get "/repos/onehub/doppio/issues/#{issue.number}", (issue) ->
         labels = issue.labels.map (label) -> label.name
 
         return unless labels.indexOf('customers impacted') > -1
@@ -122,8 +122,8 @@ module.exports =
         room = 'support'
 
         callback msg, room
-      catch error
-        console.log "Error: #{error}. Stack:\n#{error.stack}"
+    catch error
+      console.log "Error: #{error}. Stack:\n#{error.stack}"
 
   issue_comment: (data, callback) ->
     issue = data.issue
