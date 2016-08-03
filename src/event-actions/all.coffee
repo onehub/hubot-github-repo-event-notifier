@@ -110,7 +110,9 @@ module.exports =
 
     return unless action == 'closed'
 
-    github.get "/repos/onehub/doppio/issues/#{issue.number}", (issue) ->
+    console.log "GET #{issue.url}"
+
+    github.get issue.url, (issue) ->
       labels = issue.labels.map (label) -> label.name
 
       return unless labels.indexOf('customers impacted') > -1
@@ -217,9 +219,9 @@ module.exports =
       when 'closed'
         # Hit github API and find out if it has "customers impacted" label
 
-        console.log "GET /repos/onehub/doppio/issues/#{pull_num}"
+        console.log "GET #{pull_req.issue_url}"
 
-        github.get "/repos/onehub/doppio/issues/#{pull_num}", (pull) ->
+        github.get pull_req.issue_url, (pull) ->
           labels = pull.labels.map (label) -> label.name
 
           return unless labels.indexOf('customers impacted') > -1
