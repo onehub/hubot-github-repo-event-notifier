@@ -223,6 +223,7 @@ module.exports =
         # Hit github API and find out if it has "customers impacted" label
 
         console.log "GET #{pull_req.issue_url}"
+        console.log repo, base, auto_pr_repos
 
         if repo in auto_pr_repos and base != 'master'
           onehub.create_or_update_pull_request(repo).then (pull_request) ->
