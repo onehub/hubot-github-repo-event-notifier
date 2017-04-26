@@ -23,6 +23,7 @@ extractMentionsFromBody = (body) ->
     ""
 
 github = require('githubot')
+onehub = require('./onehub.coffee')
 
 module.exports =
   commit_comment: (data, callback) ->
@@ -201,6 +202,8 @@ module.exports =
   #   callback msg + "- #{pull_req.html_url}"
 
   pull_request: (data, callback) ->
+    auto_pr_repos = ["civet-api", "civet-frontend", "civet-scanner"]
+
     pull_num = data.number
     pull_req = data.pull_request
     base = data.base
@@ -220,6 +223,10 @@ module.exports =
         # Hit github API and find out if it has "customers impacted" label
 
         console.log "GET #{pull_req.issue_url}"
+
+        if repo in auto_pr_repos and base != 'master'
+          onehub.create_or_update_pull_request(repo).then (pull_request) ->
+            callback "@here: The production pull request for #{repo} has been updated: #{pull_request.url}", 'development'
 
         github.get pull_req.issue_url, (pull) ->
           labels = pull.labels.map (label) -> label.name
