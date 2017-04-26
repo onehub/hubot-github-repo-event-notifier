@@ -222,12 +222,11 @@ module.exports =
       when 'closed'
         # Hit github API and find out if it has "customers impacted" label
 
-        console.log "GET #{pull_req.issue_url}"
-        console.log repo, base, auto_pr_repos
-
-        if repo in auto_pr_repos and base != 'master'
+        if data.repository.name in auto_pr_repos and data.pull_request.base.ref == 'staging'
           onehub.create_or_update_pull_request(repo).then (pull_request) ->
             callback "@here: The production pull request for #{repo} has been updated: #{pull_request.url}", 'development'
+
+        console.log "GET #{pull_req.issue_url}"
 
         github.get pull_req.issue_url, (pull) ->
           labels = pull.labels.map (label) -> label.name
