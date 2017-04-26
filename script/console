@@ -27,3 +27,4 @@ context.eventPayloads = {
 };
 context.notifier = require(process.cwd() + "/src/github-repo-event-notifier.coffee");
 context.actions  = require(process.cwd() + "/src/event-actions/all.coffee");
+context.oh = require(process.cwd() + "/src/event-actions/onehub.coffee");
