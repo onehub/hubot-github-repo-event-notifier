@@ -2,7 +2,7 @@
 
 github = require('githubot')
 
-PULL_REQUEST_BODY = "AUTOMATICALLY GENERATED DO NOT EDIT\n"
+PULL_REQUEST_BODY = "AUTOMATICALLY GENERATED DO NOT EDIT\n\n"
 
 onehub = {
   pull_request: (repo) ->
