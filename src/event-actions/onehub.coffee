@@ -10,6 +10,7 @@ onehub = {
       github.get "repos/onehub/#{repo}/pulls",
         { state: "open", head: "staging", base: "master" },
         (pulls) ->
+          console.log(pulls)
           switch pulls.length
             when 0
               resolve null
