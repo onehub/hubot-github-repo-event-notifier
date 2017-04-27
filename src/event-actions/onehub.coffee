@@ -73,7 +73,7 @@ onehub = {
     new Promise (resolve, reject) =>
       this.pull_request(repo).then (pull_request) =>
         if pull_request
-          update_pull_request(repo, pull_request.number).then (pull_request) ->
+          this.update_pull_request(repo, pull_request.number).then (pull_request) ->
             resolve pull_request
         else
           this.create_pull_request(repo).then (pull_request) =>
