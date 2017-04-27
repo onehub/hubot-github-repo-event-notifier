@@ -225,7 +225,7 @@ module.exports =
         if data.repository.name in auto_pr_repos and data.pull_request.base.ref == 'staging'
           console.log('WTFbbq ', data.repository.name)
           onehub.create_or_update_pull_request(data.repository.name).then (pull_request) ->
-            callback "@here: The production pull request for #{repo} has been updated: #{pull_request.url}", 'development'
+            callback "@here: The production pull request for #{data.repository.name} has been updated: #{pull_request.url}", 'development'
 
         console.log "GET #{pull_req.issue_url}"
 
