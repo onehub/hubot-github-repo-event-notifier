@@ -28,7 +28,7 @@ onehub = {
       try
         self.pull_request(repo).then (pull_request) ->
           return null unless pull_request
-          github.get "repos/onehub/#{repo}/pulls/#{pull_request.number}/commits", (commits) ->
+          github.get "repos/onehub/#{repo}/pulls/#{pull_request.number}/commits?per_page=250", (commits) ->
             commit_msgs = (commit_msg.commit.message for commit_msg in commits)
             resolve commit_msgs
       catch e
