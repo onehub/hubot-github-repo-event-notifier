@@ -82,7 +82,7 @@ onehub = {
     new Promise (resolve, reject) ->
       self.pull_request(repo).then (pull_request) ->
         if pull_request
-          update_pull_request(repo, pull_request.number).then (pull_request) ->
+          self.update_pull_request(repo, pull_request.number).then (pull_request) ->
             resolve pull_request
         else
           self.create_pull_request(repo).then (pull_request) ->
