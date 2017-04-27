@@ -22,6 +22,7 @@ onehub = {
             else
               throw new Error 'PullRequestQuantityError'
 
+  # Until we support pagination we only get the first 250 commits
   pull_request_commits: (repo) ->
     self = this
     new Promise (resolve, reject) ->
