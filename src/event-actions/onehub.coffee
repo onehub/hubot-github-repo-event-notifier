@@ -22,11 +22,10 @@ onehub = {
             else
               throw new Error 'PullRequestQuantityError'
 
-  pull_request_commits: (repo) ->
-    self = this
+  pull_request_commits: (repo) =>
     new Promise (resolve, reject) ->
       try
-        self.pull_request(repo).then (pull_request) ->
+        this.pull_request(repo).then (pull_request) ->
           return null unless pull_request
           github.get "repos/onehub/#{repo}/pulls/#{pull_request.number}/commits", (commits) ->
             commit_msgs = (commit_msg.commit.message for commit_msg in commits)
@@ -34,20 +33,18 @@ onehub = {
       catch e
         console.error "too manny problems", e
 
-  commit_msgs: (repo) ->
-    self = this
-    new Promise (resolve, reject) ->
-      self.pull_request_commits(repo).then (commit_msgs) ->
+  commit_msgs: (repo) =>
+    new Promise (resolve, reject) =>
+      this.pull_request_commits(repo).then (commit_msgs) ->
         resolve commit_msgs
 
 
-  branches_to_merge: (repo) ->
+  branches_to_merge: (repo) =>
     branch_pattern = /onehub\/(\d+.+)\\/
     branches = []
-    self = this
 
-    new Promise (resolve, reject) ->
-      self.commit_msgs(repo).then((commit_msgs) ->
+    new Promise (resolve, reject) =>
+      this.commit_msgs(repo).then((commit_msgs) ->
         for commit_msg in commit_msgs
           match = commit_msg.match(/onehub\/(\d+.+?)\n/)
           branches.push "##{match[1].replace(/\-/g, ' ')}" if match
@@ -56,36 +53,31 @@ onehub = {
       )
 
   create_pull_request: (repo) ->
-    self = this
-
     new Promise (resolve, reject) ->
       github.post "repos/onehub/#{repo}/pulls",
         { base: "master", head: "staging", title: "Production" },
         (pull_request) ->
           resolve { url: pull_request.html_url, number: pull_request.number }
 
-  update_pull_request: (repo, number) ->
-    self = this
-
-    new Promise (resolve, reject) ->
-      self.branches_to_merge(repo).then (branches) ->
+  update_pull_request: (repo, number) =>
+    new Promise (resolve, reject) =>
+      this.branches_to_merge(repo).then (branches) ->
         github.patch "repos/onehub/#{repo}/pulls/#{number}",
           { body: "#{PULL_REQUEST_BODY} #{branches.join('\n')}" },
           (pull_request) ->
             resolve { url: pull_request.html_url, number: pull_request.number }
 
-  create_or_update_pull_request: (repo) ->
-    self = this
+  create_or_update_pull_request: (repo) =>
     console.log("REPO NAME: ", repo)
 
-    new Promise (resolve, reject) ->
-      self.pull_request(repo).then (pull_request) ->
+    new Promise (resolve, reject) =>
+      this.pull_request(repo).then (pull_request) =>
         if pull_request
           update_pull_request(repo, pull_request.number).then (pull_request) ->
             resolve pull_request
         else
-          self.create_pull_request(repo).then (pull_request) ->
-            self.update_pull_request(repo, pull_request.number).then (pull_request) ->
+          this.create_pull_request(repo).then (pull_request) =>
+            this.update_pull_request(repo, pull_request.number).then (pull_request) =>
               resolve pull_request
 }
 
