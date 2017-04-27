@@ -223,7 +223,7 @@ module.exports =
         # Hit github API and find out if it has "customers impacted" label
 
         if data.repository.name in auto_pr_repos and data.pull_request.base.ref == 'staging'
-          onehub.create_or_update_pull_request(repo).then (pull_request) ->
+          onehub.create_or_update_pull_request(data.repository.name).then (pull_request) ->
             callback "@here: The production pull request for #{repo} has been updated: #{pull_request.url}", 'development'
 
         console.log "GET #{pull_req.issue_url}"
