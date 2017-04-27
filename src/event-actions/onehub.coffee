@@ -76,6 +76,7 @@ onehub = {
 
   create_or_update_pull_request: (repo) ->
     self = this
+    console.log("REPO NAME: ", repo)
 
     new Promise (resolve, reject) ->
       self.pull_request(repo).then (pull_request) ->
