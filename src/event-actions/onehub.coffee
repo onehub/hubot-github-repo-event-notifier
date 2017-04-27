@@ -6,11 +6,12 @@ PULL_REQUEST_BODY = "AUTOMATICALLY GENERATED DO NOT EDIT\n\n"
 
 onehub = {
   pull_request: (repo) ->
+    console.log('squrriel', repo)
     new Promise (resolve, reject) ->
       github.get "repos/onehub/#{repo}/pulls",
         { state: "open", head: "staging", base: "master" },
         (pulls) ->
-          console.log(pulls)
+          console.log('taco', pulls)
           switch pulls.length
             when 0
               resolve null
