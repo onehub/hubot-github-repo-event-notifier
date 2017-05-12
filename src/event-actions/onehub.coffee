@@ -2,8 +2,6 @@
 
 github = require('githubot')
 
-PULL_REQUEST_BODY = "AUTOMATICALLY GENERATED DO NOT EDIT\n\n"
-
 onehub = {
   pull_request: (repo) ->
     new Promise (resolve, reject) ->
@@ -58,34 +56,46 @@ onehub = {
 
   create_pull_request: (repo) ->
     self = this
+    date = new Date()
 
     new Promise (resolve, reject) ->
       github.post "repos/onehub/#{repo}/pulls",
-        { base: "master", head: "staging", title: "Production" },
+        {
+          base: "master",
+          head: "staging",
+          title: "Production Deploy #{date.getMonth() + 1}/#{date.getDate()}",
+          body: "*AUTOMAGICALLY GENERATED DO NOT EDIT*\n\n"
+        },
         (pull_request) ->
           resolve { url: pull_request.html_url, number: pull_request.number }
 
-  update_pull_request: (repo, number) ->
+  pull_request_body: (pull_request_body, merge_data) ->
+    "#{pull_request_body}\n##{merge_data.number} - #{merge_data.title}\n"
+
+  update_pull_request: (repo, pull_request, merge_data) ->
     self = this
 
     new Promise (resolve, reject) ->
       self.branches_to_merge(repo).then (branches) ->
-        github.patch "repos/onehub/#{repo}/pulls/#{number}",
-          { body: "#{PULL_REQUEST_BODY} #{branches.join('\n')}" },
+        github.patch "repos/onehub/#{repo}/pulls/#{pull_request.number}",
+          {
+            body: self.pull_request_body(pull_request.body, merge_data)
+          },
           (pull_request) ->
             resolve { url: pull_request.html_url, number: pull_request.number }
 
-  create_or_update_pull_request: (repo) ->
+  create_or_update_pull_request: (merge_data) ->
     self = this
+    repo = merge_data.repository.name
 
     new Promise (resolve, reject) ->
       self.pull_request(repo).then (pull_request) ->
         if pull_request
-          self.update_pull_request(repo, pull_request.number).then (pull_request) ->
+          self.update_pull_request(repo, pull_request, merge_data).then (pull_request) ->
             resolve pull_request
         else
           self.create_pull_request(repo).then (pull_request) ->
-            self.update_pull_request(repo, pull_request.number).then (pull_request) ->
+            self.update_pull_request(repo, pull_request, merge_data).then (pull_request) ->
               resolve pull_request
 }
 
