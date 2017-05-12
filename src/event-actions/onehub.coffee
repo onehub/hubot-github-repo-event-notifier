@@ -63,26 +63,32 @@ onehub = {
         {
           base: "master",
           head: "staging",
-          title: "Production Deploy #{date.getMonth() + 1}/#{date.getDate()}",
+          title: "Prod Deploy - #{date.getMonth() + 1}/#{date.getDate() - 1} - 1 Item",
           body: "*AUTOMAGICALLY GENERATED DO NOT EDIT*\n\n"
         },
         (pull_request) ->
           resolve { url: pull_request.html_url, number: pull_request.number }
 
   pull_request_body: (pull_request_body, merge_data) ->
-    "#{pull_request_body}\n##{merge_data.number} - #{merge_data.title}\n"
+    "#{pull_request_body}\n##{merge_data.pull_request.number} - #{merge_data.pull_request.title}\n"
+
+  pull_request_title: (pull_request_body) ->
+    merge_count = pull_request_body.match(/(\#\d+)/).length
+    "Prod Deploy - #{date.getMonth() + 1}/#{date.getDate() - 1} - #{merge_count} Items"
 
   update_pull_request: (repo, pull_request, merge_data) ->
     self = this
+    body = @pull_request_body(pull_request.body, merge_data)
+    title = pull_request_title(body)
 
     new Promise (resolve, reject) ->
-      self.branches_to_merge(repo).then (branches) ->
-        github.patch "repos/onehub/#{repo}/pulls/#{pull_request.number}",
-          {
-            body: self.pull_request_body(pull_request.body, merge_data)
-          },
-          (pull_request) ->
-            resolve { url: pull_request.html_url, number: pull_request.number }
+      github.patch "repos/onehub/#{repo}/pulls/#{pull_request.number}",
+        {
+          body: body
+          title: title
+        },
+        (pull_request) ->
+          resolve { url: pull_request.html_url, number: pull_request.number }
 
   create_or_update_pull_request: (merge_data) ->
     self = this
