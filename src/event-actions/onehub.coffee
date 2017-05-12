@@ -70,11 +70,11 @@ onehub = {
           resolve { url: pull_request.html_url, number: pull_request.number }
 
   pull_request_body: (pull_request_body, merge_data) ->
-    "#{pull_request_body}\n##{merge_data.pull_request.number} - #{merge_data.pull_request.title}\n"
+    "#{pull_request_body}\n##{merge_data.pull_request.number} - #{merge_data.pull_request.title}"
 
   pull_request_title: (pull_request_body) ->
     date = new Date()
-    merge_count = pull_request_body.match(/(\#\d+)/).length
+    merge_count = pull_request_body.match(/(\#\d+)/g).length
 
     "Prod Deploy - #{date.getMonth() + 1}/#{date.getDate() - 1} - #{merge_count} Items"
 
