@@ -79,7 +79,7 @@ onehub = {
   update_pull_request: (repo, pull_request, merge_data) ->
     self = this
     body = @pull_request_body(pull_request.body, merge_data)
-    title = pull_request_title(body)
+    title = @pull_request_title(body)
 
     new Promise (resolve, reject) ->
       github.patch "repos/onehub/#{repo}/pulls/#{pull_request.number}",
