@@ -76,7 +76,7 @@ onehub = {
     date = new Date()
     merge_count = pull_request_body.match(/(\#\d+)/g).length
 
-    "Prod Deploy - #{date.getMonth() + 1}/#{date.getDate() - 1} - #{merge_count} Items"
+    "Production Deploy - #{date.getMonth() + 1}/#{date.getDate() - 1} - #{merge_count} Items"
 
   update_pull_request: (repo, pull_request, merge_data) ->
     self = this
