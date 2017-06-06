@@ -63,7 +63,7 @@ onehub = {
         {
           base: "master",
           head: "staging",
-          title: "Prod Deploy - #{date.getMonth() + 1}/#{date.getDate() - 1} - 1 Item",
+          title: @pull_request_title,
           body: "*AUTOMAGICALLY GENERATED DO NOT EDIT*\n\n"
         },
         (pull_request) ->
@@ -74,9 +74,11 @@ onehub = {
 
   pull_request_title: (pull_request_body) ->
     date = new Date()
-    merge_count = pull_request_body.match(/(\#\d+)/g).length
+    merge_count = pull_request_body ? pull_request_body.match(/(\#\d+)/g).length : 1
 
-    "Production Deploy - #{date.getMonth() + 1}/#{date.getDate() - 1} - #{merge_count} Items"
+    items_text = merge_count === 1 ? 'Item' : 'Items'
+
+    "Production Deploy - #{date.getMonth() + 1}/#{date.getDate() - 1} - #{merge_count} #{items_text}"
 
   update_pull_request: (repo, pull_request, merge_data) ->
     self = this
