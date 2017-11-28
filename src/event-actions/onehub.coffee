@@ -75,9 +75,9 @@ onehub = {
 
   pull_request_title: (pull_request_body) ->
     date = new Date()
-    merge_count = pull_request_body ? pull_request_body.match(/(\#\d+)/g).length : 1
+    merge_count = if pull_request_body then pull_request_body.match(/(\#\d+)/g).length else 1
 
-    items_text = merge_count === 1 ? 'Item' : 'Items'
+    items_text = if merge_count == 1 then 'Item' else 'Items'
 
     "Production Deploy - #{date.getMonth() + 1}/#{date.getDate() - 1} - #{merge_count} #{items_text}"
 
