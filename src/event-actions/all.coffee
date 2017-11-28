@@ -221,7 +221,7 @@ module.exports =
           callback msg, room
       when 'closed'
         # Hit github API and find out if it has "customers impacted" label
-        if data.repository.name in auto_pr_repos and data.pull_request.base.ref == 'staging'
+        if data.repository.name in auto_pr_repos and data.pull_request.base.ref == 'staging' and data.pull_request.merged
           setTimeout (->
             onehub.create_or_update_pull_request(data).then (pull_request) ->
               callback "@here: The production pull request for #{data.repository.name} has been updated: #{pull_request.url}", 'development'
