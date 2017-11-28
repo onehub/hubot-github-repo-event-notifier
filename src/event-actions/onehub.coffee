@@ -64,7 +64,8 @@ onehub = {
           base: "master",
           head: "staging",
           title: @pull_request_title,
-          body: "*AUTOMAGICALLY GENERATED DO NOT EDIT*\n\n"
+          body: "*AUTOMAGICALLY GENERATED DO NOT EDIT*\n\n",
+          labels: ['ready']
         },
         (pull_request) ->
           resolve { url: pull_request.html_url, number: pull_request.number }
