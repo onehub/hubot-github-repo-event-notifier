@@ -76,12 +76,13 @@ onehub = {
     data.filter((entry) -> !!entry).join("\n")
 
   pull_request_title: (pull_request_body) ->
-    date = new Date()
     merge_count = if pull_request_body then pull_request_body.match(/(\#\d+)/g).length else 1
 
     items_text = if merge_count == 1 then 'Item' else 'Items'
 
-    "Production Deploy - #{date.getMonth() + 1}/#{date.getDate() - 1} - #{merge_count} #{items_text}"
+    date_string = new Date().toLocaleDateString("en-US", { timeZone: 'America/Los_Angeles', month: 'numeric', day: 'numeric' })
+
+    "Production Deploy - #{date_string} - #{merge_count} #{items_text}"
 
   update_pull_request: (repo, pull_request, merge_data) ->
     self = this
