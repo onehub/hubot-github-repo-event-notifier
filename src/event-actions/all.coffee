@@ -216,7 +216,7 @@ module.exports =
       when 'labeled'
         if data.label? && data.label.name == 'needs code review'
           msg  = "@here: \##{data.number} `needs code review` #{pull_req.html_url}"
-          room = 'development'
+          room = 'needs-code-review'
 
           callback msg, room
       when 'closed'
