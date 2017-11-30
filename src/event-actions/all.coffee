@@ -215,6 +215,8 @@ module.exports =
     switch action
       when 'labeled'
         if data.label? && data.label.name == 'needs code review'
+          return if data.pull_request.title.match(/Production Deploy/)
+
           msg  = "@here: \##{data.number} `needs code review` #{pull_req.html_url}"
           room = 'needs-code-review'
 
