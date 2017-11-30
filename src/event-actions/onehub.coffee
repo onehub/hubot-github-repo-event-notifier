@@ -63,7 +63,7 @@ onehub = {
         {
           base: "master",
           head: "staging",
-          title: @pull_request_title,
+          title: @pull_request_title(),
           body: "*AUTOMAGICALLY GENERATED DO NOT EDIT*\n\n",
           labels: ['ready']
         },
