@@ -65,10 +65,10 @@ onehub = {
           head: "staging",
           title: @pull_request_title(),
           body: "*AUTOMAGICALLY GENERATED DO NOT EDIT*\n\n",
-          labels: ['ready']
         },
         (pull_request) ->
-          resolve { url: pull_request.html_url, number: pull_request.number }
+          github.put "repos/onehub/#{repo}/issues/#{pull_request.number}/labels", ['ready'], () ->
+            resolve { url: pull_request.html_url, number: pull_request.number }
 
   pull_request_body: (pull_request_body, merge_data) ->
     data = [pull_request_body, "##{merge_data.pull_request.number} - #{merge_data.pull_request.title}"]
