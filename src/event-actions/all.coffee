@@ -226,7 +226,10 @@ module.exports =
         if data.repository.name in auto_pr_repos and data.pull_request.base.ref == 'staging' and data.pull_request.merged
           setTimeout (->
             onehub.create_or_update_pull_request(data).then (pull_request) ->
-              callback "@here: The production pull request for #{data.repository.name} has been updated: #{pull_request.url}", 'development'
+              msg  = "@here: The production pull request for #{data.repository.name} has been updated: #{pull_request.url}"
+              room = 'notifications'
+
+              callback msg, room
           ), 30 * 1000
 
         github.get pull_req.issue_url, (pull) ->
