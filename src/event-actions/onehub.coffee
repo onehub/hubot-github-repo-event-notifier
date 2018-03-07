@@ -8,14 +8,16 @@ onehub = {
       github.get "repos/onehub/#{repo}/pulls",
         { state: "open", head: "staging", base: "master" },
         (pulls) ->
-          switch pulls.length
+          deployPulls = pulls.filter((pull) -> pull.title.startsWith('Production Deploy'))
+
+          switch deployPulls.length
             when 0
               resolve null
             when 1
               resolve {
-                id: pulls[0].id,
-                body: pulls[0].body,
-                number: pulls[0].number
+                id: deployPulls[0].id,
+                body: deployPulls[0].body,
+                number: deployPulls[0].number
               }
             else
               throw new Error 'PullRequestQuantityError'
